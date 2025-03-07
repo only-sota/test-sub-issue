@@ -1,6 +1,8 @@
 name: get-billing-for-github-actions
 
-on: push
+on: 
+  push
+  workflow_dispatch 
 
 jobs:
   check-github-actions-usage:
