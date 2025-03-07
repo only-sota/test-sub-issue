@@ -1,0 +1,32 @@
+name: get-billing-for-github-actions
+
+on: push
+
+jobs:
+  check-github-actions-usage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3 # リポジトリをチェックアウト
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Get billing for GitHub Actions
+        id: get-billing-for-github-actions
+        uses: keita-hino/get-billing-for-github-actions@v0.1.0
+        with:
+          account-type: user
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: 【当月】GitHub Actionsの利用量
+          SLACK_USERNAME: GitHubレポート
+          # 設定したいアイコンがあれば指定してください
+          # SLACK_ICON: 
+          MSG_MINIMAL: true
+          SLACK_MESSAGE: > 
+            現在使用しているプランの GitHub Actions の利用上限は `${{steps.get-billing-for-github-actions.outputs.included-minutes}}` 分です。
+            当月の利用量は `${{steps.get-billing-for-github-actions.outputs.total-minutes-used}}` 分で残り `${{steps.get-billing-for-github-actions.outputs.usable-minutes}}` 分です。 
+            次回のリセット日まで `${{steps.get-billing-for-github-actions.outputs.days-left-in-billing-cycle}}` 日です。
