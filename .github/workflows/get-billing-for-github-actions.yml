@@ -1,8 +1,8 @@
 name: get-billing-for-github-actions
 
-on: 
-  push
-  workflow_dispatch 
+on:
+  push:
+  workflow_dispatch: # 手動実行も可能にする
 
 jobs:
   check-github-actions-usage:
