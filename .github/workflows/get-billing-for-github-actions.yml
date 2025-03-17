@@ -1,33 +1,33 @@
-name: Notify the billing of GitHub Actions for the current month to Slack
-on:
-  workflow_dispatch:
-  schedule:
-    # ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
-    - cron: '0 9 * * 1'
+# name: Notify the billing of GitHub Actions for the current month to Slack
+# on:
+#   workflow_dispatch:
+#   schedule:
+#     # ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+#     - cron: '0 9 * * 1'
 
-jobs:
-  check-github-actions-usage:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Get billing for GitHub Actions
-        id: get-billing-for-github-actions
-        uses: keita-hino/get-billing-for-github-actions@v0.1.1
-        with:
-          # For organization accounts, set the `org` parameter.
-          account-type: user
-          github-token: ${{ secrets.PAT_ACCESS_TOKEN }}
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_TITLE: Usage of GitHub Actions for the current month
-          MSG_MINIMAL: true
-          SLACK_MESSAGE: > 
-            The usage limit of GitHub Actions for the current plan is *${{steps.get-billing-for-github-actions.outputs.included-minutes}}* minutes.
-            The usage for this month is *${{steps.get-billing-for-github-actions.outputs.total-minutes-used}}* minutes, and there are *${{steps.get-billing-for-github-actions.outputs.usable-minutes}}* minutes remaining.
-            The next reset day is in *${{steps.get-billing-for-github-actions.outputs.days-left-in-billing-cycle}}* days.
+# jobs:
+#   check-github-actions-usage:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+#       - name: Get billing for GitHub Actions
+#         id: get-billing-for-github-actions
+#         uses: keita-hino/get-billing-for-github-actions@v0.1.1
+#         with:
+#           # For organization accounts, set the `org` parameter.
+#           account-type: user
+#           github-token: ${{ secrets.PAT_ACCESS_TOKEN }}
+#       - name: Slack Notification
+#         uses: rtCamp/action-slack-notify@v2
+#         env:
+#           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#           SLACK_TITLE: Usage of GitHub Actions for the current month
+#           MSG_MINIMAL: true
+#           SLACK_MESSAGE: > 
+#             The usage limit of GitHub Actions for the current plan is *${{steps.get-billing-for-github-actions.outputs.included-minutes}}* minutes.
+#             The usage for this month is *${{steps.get-billing-for-github-actions.outputs.total-minutes-used}}* minutes, and there are *${{steps.get-billing-for-github-actions.outputs.usable-minutes}}* minutes remaining.
+#             The next reset day is in *${{steps.get-billing-for-github-actions.outputs.days-left-in-billing-cycle}}* days.
